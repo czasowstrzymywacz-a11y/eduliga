@@ -45,3 +45,9 @@ W aplikacji użytkownik może też wybrać tryb nocny przyciskiem w górnym pask
 ## Wspólny czat uczniów
 
 Wersja 0.13 dodaje pseudonimowy czat widoczny dla zalogowanych uczniów. W istniejącym projekcie Supabase otwórz SQL Editor i uruchom jednorazowo supabase/migrations/202610070001_class_chat.sql. Migracja tworzy prywatną tabelę, ogranicza odczyt i wysyłanie do zalogowanych kont, ustawia pseudonim z profilu, ogranicza długość i częstotliwość wpisów oraz blokuje publikowanie danych kontaktowych i odnośników. Po uruchomieniu odśwież aplikację. supabase-sync.sql zawiera również tę migrację dla nowych instalacji.
+
+## Liga Angielska i bitwy
+
+Wersja 0.27 dodaje wybór ligi na ekranie startowym oraz moduł nauki dwóch form czasowników nieregularnych z widocznej części dołączonej tabeli. Statystyki i XP zapisują się w danych postępu ucznia (`student_progress`) oraz lokalnej kopii dla konta. Nie wymaga to dodatkowej migracji.
+
+Bitwy korzystają z kanałów Supabase Realtime i wymagają zalogowanych kont z włączoną usługą Realtime. Pokoje są tymczasowe, a kod pokoju trzeba przekazać drugiemu uczniowi. Obecny moduł ćwiczy 21 czasowników widocznych na zdjęciu; dalsze pozycje można dodać do `liga-angielska.js`.
