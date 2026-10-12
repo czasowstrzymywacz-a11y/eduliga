@@ -248,11 +248,24 @@ checkAnswer = (options={}) => {
   grantJokeReward(attemptId);renderDictationRules();document.getElementById('result').scrollIntoView({behavior:'smooth',block:'start'});
 };
 
+function mergeEnglishLeagueProgress(remote,local,baseline) {
+  if(!remote&&!local)return undefined;
+  const a=remote||{},b=local||{},base=baseline||{},hasBaseline=!!baseline;
+  const mergeCount=(remoteValue,localValue,baseValue)=>hasBaseline?Number(remoteValue||0)+Math.max(0,Number(localValue||0)-Number(baseValue||0)):Math.max(Number(remoteValue||0),Number(localValue||0));
+  const words={};
+  for(const id of new Set([...Object.keys(a.words||{}),...Object.keys(b.words||{})])){
+    const r=a.words?.[id]||{},l=b.words?.[id]||{},old=base.words?.[id]||{};
+    words[id]={...r,...l,correct:mergeCount(r.correct,l.correct,old.correct),wrong:mergeCount(r.wrong,l.wrong,old.wrong),attempts:mergeCount(r.attempts,l.attempts,old.attempts),last:[r.last,l.last].filter(Boolean).sort().at(-1)||null};
+  }
+  const history=new Map();
+  for(const row of [...(a.history||[]),...(b.history||[])])history.set(row.id||JSON.stringify(row),row);
+  return {...a,...b,xp:mergeCount(a.xp,b.xp,base.xp),correct:mergeCount(a.correct,b.correct,base.correct),wrong:mergeCount(a.wrong,b.wrong,base.wrong),rounds:mergeCount(a.rounds,b.rounds,base.rounds),streak:Math.max(Number(a.streak)||0,Number(b.streak)||0),bestStreak:Math.max(Number(a.bestStreak)||0,Number(b.bestStreak)||0),words,awards:[...new Set([...(a.awards||[]),...(b.awards||[])])],history:[...history.values()]};
+}
 function mergeAccountProgress(remote,local,baseline) {
   const a=league.normalize(remote),b=league.normalize(local),base=baseline?league.normalize(baseline):null;
   const identity=s=>s.id||JSON.stringify([s.date,s.title,s.score,s.dictationId,s.errors]);
   const sessions=new Map(a.sessions.map(s=>[identity(s),s]));for(const s of b.sessions)sessions.set(identity(s),s);
-  const merged={...a,sessions:[...sessions.values()].sort((x,y)=>(x.createdAt||x.date||'').localeCompare(y.createdAt||y.date||'')),generatedCount:Math.max(a.generatedCount,b.generatedCount),words:{...a.words},ruleStats:{...a.ruleStats}};
+  const merged={...a,...(a.englishLeague||b.englishLeague?{englishLeague:mergeEnglishLeagueProgress(a.englishLeague,b.englishLeague,base?.englishLeague)}:{}),sessions:[...sessions.values()].sort((x,y)=>(x.createdAt||x.date||'').localeCompare(y.createdAt||y.date||'')),generatedCount:Math.max(a.generatedCount,b.generatedCount),words:{...a.words},ruleStats:{...a.ruleStats}};
   for(const [word,row] of Object.entries(b.words)){
     const r=a.words[word]||{correct:0,wrong:0,recent:[],variants:[]},previous=base?.words[word]||{correct:0,wrong:0};
     const recent=new Map([...(r.recent||[]),...(row.recent||[])].map((v,i)=>[v.id||JSON.stringify([v.date,v.ok,i]),v]));

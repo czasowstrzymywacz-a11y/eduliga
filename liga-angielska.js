@@ -10,7 +10,7 @@
   const normalise=x=>({...blank(),...(x||{}),words:x?.words&&typeof x.words==='object'?x.words:{},awards:Array.isArray(x?.awards)?x.awards:[],history:Array.isArray(x?.history)?x.history:[]});
   let state=blank(),round=null,channel=null,battle=null;
   function load(){try{const cloud=typeof data!=='undefined'?data.englishLeague:null;const local=JSON.parse(localStorage.getItem(key())||'null');state=normalise(cloud||local);if(cloud)localStorage.setItem(key(),JSON.stringify(state));}catch{state=blank();}}
-  function persist(){state=normalise(state);try{localStorage.setItem(key(),JSON.stringify(state));}catch{}if(typeof data!=='undefined'){data.englishLeague=state;if(typeof persistAccount==='function')persistAccount(owner()==='guest'?null:owner(),true);if(owner()!=='guest'&&typeof queueCloudSave==='function')queueCloudSave();}renderEnglishSummary();}
+  function persist(){state=normalise(state);try{localStorage.setItem(key(),JSON.stringify(state));}catch{}if(typeof data!=='undefined'){data.englishLeague=state;data.updatedAt=new Date().toISOString();if(typeof persistAccount==='function')persistAccount(owner()==='guest'?null:owner(),true);if(owner()!=='guest'&&typeof queueCloudSave==='function')queueCloudSave();}renderEnglishSummary();}
   function accuracy(v){return v&&v.correct+v.wrong?Math.round(v.correct*100/(v.correct+v.wrong)):0;}
   function weight(v){const s=state.words[v.id]||{};return 1+Math.min(7,(s.wrong||0)*.7)+Math.max(0,4-accuracy(s)/25);}
   function pick(pool){const total=pool.reduce((n,v)=>n+weight(v),0);let r=Math.random()*total;for(const v of pool){r-=weight(v);if(r<=0)return v;}return pool.at(-1);}
