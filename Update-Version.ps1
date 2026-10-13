@@ -26,7 +26,7 @@ foreach ($pattern in @($metaPattern, $badgePattern)) {
 }
 $html = [regex]::Replace($html, $metaPattern, ('<meta name="application-version" content="{0}">' -f $Version))
 $html = [regex]::Replace($html, $badgePattern, ('<button type="button" id="app-version" class="app-version" title="Pokaż historię wersji" onclick="openVersionHistory()">v{0}</button>' -f $Version))
-foreach ($asset in @('ortoliga.css','ortoliga-core.js','ortoliga.js','liga-angielska.css','liga-angielska.js')) {
+foreach ($asset in @('ortoliga.css','ortoliga-core.js','ortoliga.js','liga-angielska.css','liga-angielska.js','liga-social.js')) {
     $pattern = [regex]::Escape($asset) + '\?v=\d+\.\d+'
     $html = [regex]::Replace($html, $pattern, ($asset + '?v=' + $Version))
 }

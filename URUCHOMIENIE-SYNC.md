@@ -51,3 +51,6 @@ Wersja 0.13 dodaje pseudonimowy czat widoczny dla zalogowanych uczniów. W istni
 Wersja 0.27 dodaje wybór ligi na ekranie startowym oraz moduł nauki dwóch form czasowników nieregularnych z widocznej części dołączonej tabeli. Statystyki i XP zapisują się w danych postępu ucznia (`student_progress`) oraz lokalnej kopii dla konta. Nie wymaga to dodatkowej migracji.
 
 Bitwy korzystają z kanałów Supabase Realtime i wymagają zalogowanych kont z włączoną usługą Realtime. Pokoje są tymczasowe, a kod pokoju trzeba przekazać drugiemu uczniowi. Obecny moduł ćwiczy 21 czasowników widocznych na zdjęciu; dalsze pozycje można dodać do `liga-angielska.js`.
+## XP na liście i zaproszenia do bitwy (0.45)
+
+Uruchom `supabase/migrations/202610130001_english_invitations.sql` w SQL Editor istniejącego projektu przed publikacją strony. Funkcja listy ujawnia zalogowanym wyłącznie pseudonim, identyfikator i łączne XP Ligi Angielskiej. Zaproszenia mogą czytać tylko nadawca i adresat; odpowiedź zapisuje wyłącznie adresat. Zaproszenia wygasają po 2 minutach, a wysyłanie ma ograniczenie częstotliwości. Powiadomienia działają przez Realtime i zapasowe odświeżanie co 10 sekund. Wszyscy dołączają do jednego stałego pokoju `liga-angielska-open-room`; nie ma kodów pokoi.
