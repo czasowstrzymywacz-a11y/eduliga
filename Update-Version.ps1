@@ -13,6 +13,10 @@ if (-not $Version) {
     $Version = '{0}.{1}' -f $parts[0], ([int]$parts[1] + 1)
 }
 $html = [System.IO.File]::ReadAllText($htmlPath)
+$historyPattern = '<article class="history-entry latest"><span>v' + [regex]::Escape($Version) + ' · teraz</span>'
+if ([regex]::Matches($html, $historyPattern).Count -ne 1) {
+    throw ('Dodaj najnowszy wpis v{0} do historii zmian w index.html przed publikacja.' -f $Version)
+}
 $metaPattern = '<meta name="application-version" content="[^"]+">'
 $badgePattern = '<button type="button" id="app-version" class="app-version" title="Pokaż historię wersji" onclick="openVersionHistory\(\)">v[^<]+</button>'
 foreach ($pattern in @($metaPattern, $badgePattern)) {
