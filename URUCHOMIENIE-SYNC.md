@@ -58,3 +58,7 @@ Uruchom `supabase/migrations/202610130001_english_invitations.sql` w SQL Editor 
 ## Rankingi obu lig (0.47)
 
 Przed publikacją wdroż migrację `supabase/migrations/202610130002_league_rankings.sql`. Funkcja udostępnia zalogowanym tylko pseudonimy i zbiorcze statystyki nauki; nie udostępnia adresów e-mail ani historii odpowiedzi. XPo to suma zaokrąglonych wyników dyktand (0–100), XP pochodzi wyłącznie z Ligi Angielskiej. Średnia ortograficzna wymaga 3 dyktand, skuteczność angielska 10 odpowiedzi. Do plików publikacji dołącz `liga-rankings.js`.
+
+## Wydanie 0.50 — trzy osobne ligi
+
+Wdróż migrację `supabase/migrations/202610130003_three_leagues.sql` przed publikacją. OrtoLiga zachowuje wcześniejsze dyktanda i zdobywa oXP; angielska zachowuje `englishLeague` i ma aXP, a `spanishLeague` przechowuje wyłącznie hXP, fiszki, pary, pisownię i bitwy hiszpańskie. `orthoBattle` przechowuje oddzielną historię bitew ortograficznych. Nowe zdarzenia mają unikalne identyfikatory; synchronizacja scala je bez powielania punktów. Punkty angielskie także mają rejestr nowych zdarzeń i zachowany początkowy wynik. Rankingi i listy użytkowników pobierają tylko pseudonimy i zbiorcze statystyki. Bitwy używają trzech oddzielnych kanałów `liga-v050-ortho`, `liga-v050-english`, `liga-v050-spanish`, mają 10 rund i wymagają minimum 2 zalogowanych graczy. Wymowa korzysta z głosów przeglądarki/urządzenia z językiem es-ES. Publikuj także `liga-platform.js`, `liga-platform.css`, `liga-hiszpanska-data.js`, `liga-hiszpanska.js` i `liga-arena.js`.

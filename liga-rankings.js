@@ -1,52 +1,10 @@
-/* Shared sidebar: separate account rankings for each league. */
 (() => {
-  const categories = {
-    ortho: [['points','Punkty XPo','XPo'],['sessions','Ukończone dyktanda','dykt.'],['weekly','Dyktanda w tym tygodniu','dykt.'],['average','Średni wynik','%'],['mastered','Słowa poprawnie ≥2 razy','słów'],['streak','Dni z rzędu','dni'],['excellent','Wyniki co najmniej 90%','wyników']],
-    english: [['points','Punkty XP','XP'],['correct','Poprawne odpowiedzi','odp.'],['accuracy','Skuteczność','%'],['mastered','Opanowane czasowniki','słów'],['rounds','Ukończone serie','serii'],['bestStreak','Najlepsza seria odpowiedzi','odp.'],['battles','Ukończone bitwy','bitew'],['wins','Wygrane bitwy','zwycięstw'],['awards','Zdobyte odznaki','odznak']]
-  };
-  const root=document.getElementById('league-user-rankings'),list=document.getElementById('league-ranking-list'),select=document.getElementById('league-ranking-category');
-  const cache=new Map();let generation=0,activeLeague=null;
-  const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const user=()=>typeof syncUser!=='undefined'?syncUser:null;
-  const value=(row,key)=>Math.max(0,Number(row.stats?.[key])||0);
-  const format=(number,unit)=>number.toLocaleString('pl-PL')+(unit==='%'?'%':' '+unit);
-  function render(){
-    if(!categories[activeLeague])return;
-    if(!user()){list.innerHTML='<p class="empty-state">Zaloguj się, aby zobaczyć rankingi użytkowników. Wyniki gościa pozostają prywatne na urządzeniu.</p>';return;}
-    const rows=cache.get(user().id+':'+activeLeague);if(!rows)return;
-    const metric=select.value,category=categories[activeLeague].find(c=>c[0]===metric),eligible=rows.filter(row=>metric==='average'?value(row,'sessions')>=3:metric==='accuracy'?value(row,'attempts')>=10:true);
-    const sorted=[...eligible].sort((a,b)=>value(b,metric)-value(a,metric)||String(a.display_name).localeCompare(String(b.display_name),'pl'));
-    let place=0,previous=null;
-    list.innerHTML=sorted.map((row,i)=>{
-      const score=value(row,metric);if(score!==previous){place=i+1;previous=score;}
-      const medal=place===1?'🥇':place===2?'🥈':place===3?'🥉':place+'.';
-      const summary=activeLeague==='ortho'?
-        [['sessions','Dyktanda'],['average','Średnia'],['mastered','Słowa ≥2×'],['streak','Dni z rzędu']]:
-        [['correct','Poprawne'],['accuracy','Skuteczność'],['mastered','Słowa'],['rounds','Serie'],['wins','Wygrane'],['awards','Odznaki']];
-      return `<article class="league-ranking-person ${row.is_me?'me':''}"><header><span>${medal}</span><b>${escape(row.display_name)}${row.is_me?' · Ty':''}</b></header><strong>${format(score,category[2])}</strong>${metric!=='points'?`<div class="league-ranking-points">${format(value(row,'points'),activeLeague==='ortho'?'XPo':'XP')}</div>`:''}<dl>${summary.map(([key,label])=>`<div><dt>${label}</dt><dd>${format(value(row,key),['average','accuracy'].includes(key)?'%':'').trim()}</dd></div>`).join('')}</dl></article>`;
-    }).join('')||'<p class="empty-state">Brak wyników w tej kategorii. Średnia wymaga 3 dyktand, a skuteczność angielska 10 odpowiedzi.</p>';
-    document.getElementById('league-ranking-note').textContent=metric==='average'?'Średnia po minimum 3 dyktandach.':metric==='accuracy'?'Skuteczność po minimum 10 odpowiedziach.':'Remis daje to samo miejsce. Rankingi obejmują zapisane wyniki kont.';
-  }
-  async function refresh(){
-    const league=document.body.dataset.activeLeague,id=user()?.id,request=++generation;
-    activeLeague=league;root.hidden=!categories[league];if(root.hidden)return;
-    const heading=league==='ortho'?'🏆 Użytkownicy OrtoLigi':'🏆 Użytkownicy Ligi Angielskiej';document.getElementById('league-ranking-title').textContent=heading;
-    if(select.dataset.league!==league){select.innerHTML=categories[league].map(([key,label])=>`<option value="${key}">${label}</option>`).join('');select.dataset.league=league;}
-    if(!id){render();return;}
-    if(cache.has(id+':'+league))render();else list.innerHTML='<p class="empty-state">Wczytuję ranking…</p>';
-    try{
-      const {data:rows,error}=await syncClient.rpc('get_league_rankings',{p_league:league});
-      if(request!==generation||user()?.id!==id||document.body.dataset.activeLeague!==league)return;
-      if(error)throw error;cache.set(id+':'+league,Array.isArray(rows)?rows:[]);render();
-    }catch{if(request===generation){list.innerHTML='<p class="empty-state">Nie udało się odświeżyć rankingu. Spróbuj ponownie.</p>';}}
-  }
-  select.addEventListener('change',render);
-  window.refreshLeagueRankings=refresh;
-  // Existing ranking navigation and refresh buttons lead to the same sidebar.
-  window.loadAllLeaderboards=refresh;
-  window.addEventListener('ortoliga-auth-change',()=>{cache.clear();void refresh();});
-  document.addEventListener('visibilitychange',()=>{if(!document.hidden)void refresh();});
-  window.addEventListener('online',()=>void refresh());
-  setInterval(()=>{if(!document.hidden&&categories[document.body.dataset.activeLeague])void refresh();},30000);
-  void refresh();
+ const A=LeagueApp,defs={ortho:[['points','Punkty oXP','oXP'],['sessions','Dyktanda','dykt.'],['weekly','Dyktanda w tygodniu','dykt.'],['average','Średni wynik','%'],['mastered','Słowa poprawnie ≥2 razy','słów'],['streak','Dni z rzędu','dni'],['battles','Bitwy','bitew'],['wins','Zwycięstwa','wygranych']],english:[['points','Punkty aXP','aXP'],['correct','Poprawne odpowiedzi','odp.'],['accuracy','Skuteczność','%'],['mastered','Opanowane słowa','słów'],['rounds','Serie','serii'],['bestStreak','Najlepsza seria','odp.'],['battles','Bitwy','bitew'],['wins','Zwycięstwa','wygranych'],['awards','Odznaki','odznak']],spanish:[['points','Punkty hXP','hXP'],['correct','Poprawne odpowiedzi','odp.'],['accuracy','Skuteczność','%'],['mastered','Opanowane słowa','słów'],['rounds','Serie','serii'],['battles','Bitwy','bitew'],['wins','Zwycięstwa','wygranych'],['awards','Odznaki','odznak']]};
+ const root=document.getElementById('league-user-rankings'),list=document.getElementById('league-ranking-list'),select=document.getElementById('league-ranking-category'),overview=document.getElementById('overview-league-rankings');let generation=0,overviewGeneration=0;const cache=new Map();
+ const active=()=>document.body.dataset.activeLeague,val=(r,k)=>Math.max(0,Number(r.stats?.[k])||0),format=(n,u)=>n.toLocaleString('pl-PL')+(u==='%'?'%':' '+u);
+ async function board(key){const id=A.user()?.id;if(!id)return [];const {data:rows,error}=await syncClient.rpc('get_league_board',{p_league:key});if(error)throw error;if(A.user()?.id!==id)return [];cache.set(id+':'+key,rows||[]);return rows||[];}
+ function render(){const key=active();if(!defs[key])return;root.hidden=false;document.getElementById('league-ranking-title').textContent='🏆 '+A.configs[key].name;if(select.dataset.league!==key){select.innerHTML=defs[key].map(([v,l])=>`<option value="${v}">${l}</option>`).join('');select.dataset.league=key;}if(!A.user()){list.innerHTML='<p>Zaloguj się, aby zobaczyć wyniki wszystkich użytkowników.</p>';return;}const rows=cache.get(A.user().id+':'+key);if(!rows)return;const metric=select.value,def=defs[key].find(x=>x[0]===metric),eligible=rows.filter(r=>metric==='average'?val(r,'sessions')>=3:metric==='accuracy'?val(r,'attempts')>=10:true),ordered=[...eligible].sort((a,b)=>val(b,metric)-val(a,metric)||a.display_name.localeCompare(b.display_name,'pl'));let last=null,place=0;list.innerHTML=ordered.map((row,i)=>{const n=val(row,metric);if(n!==last){last=n;place=i+1;}const summary=key==='ortho'?[['sessions','Dyktanda'],['average','Średnia'],['mastered','Słowa ≥2×'],['battles','Bitwy'],['wins','Wygrane']]:[['correct','Poprawne'],['accuracy','Skuteczność'],['mastered','Słowa'],['rounds','Serie'],['battles','Bitwy'],['wins','Wygrane'],['awards','Odznaki']];return `<article class="league-ranking-person ${row.is_me?'me':''}"><header><span>${place<=3?['🥇','🥈','🥉'][place-1]:place+'.'}</span><b>${A.esc(row.display_name)}${row.is_me?' · Ty':''}</b></header><strong>${format(n,def[2])}</strong>${metric!=='points'?'<div class="league-ranking-points">'+format(val(row,'points'),A.configs[key].unit)+'</div>':''}<dl>${summary.map(([f,l])=>`<div><dt>${l}</dt><dd>${format(val(row,f),['accuracy','average'].includes(f)?'%':'')}</dd></div>`).join('')}</dl></article>`;}).join('')||'<p>Brak wyników dla tej kategorii.</p>';document.getElementById('league-ranking-note').textContent=metric==='average'?'Średnia wymaga 3 dyktand.':metric==='accuracy'?'Skuteczność wymaga 10 odpowiedzi.':'Remisy mają wspólne miejsce. Punkty i wyniki każdej ligi są oddzielne.';}
+ async function refresh(){const key=active(),request=++generation,id=A.user()?.id;if(!defs[key]){root.hidden=true;if(key==='none')void refreshOverview();return;}render();if(!id)return;if(!cache.has(id+':'+key))list.innerHTML='<p>Wczytuję ranking…</p>';try{await board(key);if(generation===request&&A.user()?.id===id&&active()===key)render();}catch{if(generation===request)list.innerHTML='<p>Nie udało się pobrać rankingu. Odśwież ponownie.</p>';}}
+ async function refreshOverview(){const request=++overviewGeneration,id=A.user()?.id;if(!id){overview.innerHTML='<p>Zaloguj się, aby zobaczyć punkty wszystkich użytkowników w trzech ligach.</p>';return;}try{const results=await Promise.all(Object.keys(A.configs).map(async key=>({key,rows:await board(key)})));if(request!==overviewGeneration||A.user()?.id!==id)return;overview.innerHTML=results.map(({key,rows})=>{let last=null,place=0;return `<article class="overview-league"><h3>${A.configs[key].logo} ${A.configs[key].name}</h3><ol>${[...rows].sort((a,b)=>val(b,'points')-val(a,'points')||a.display_name.localeCompare(b.display_name,'pl')).map((r,i)=>{const n=val(r,'points');if(n!==last){last=n;place=i+1;}return `<li class="${r.is_me?'me':''}"><span>${place}.</span><span>${A.esc(r.display_name)}${r.is_me?' · Ty':''}</span><b>${format(n,A.configs[key].unit)}</b></li>`;}).join('')}</ol><button class="secondary" onclick="switchLeague('${key}');openLeagueRankings()">Pełny ranking →</button></article>`;}).join('');}catch{if(request===overviewGeneration)overview.innerHTML='<p>Rankingi są chwilowo niedostępne. Spróbuj odświeżyć.</p>';}}
+ select.addEventListener('change',render);window.refreshLeagueRankings=refresh;window.refreshOverviewRankings=refreshOverview;window.loadAllLeaderboards=()=>{if(defs[active()])openLeagueRankings();else refreshOverview();};window.addEventListener('ortoliga-auth-change',()=>{cache.clear();void refresh();});document.addEventListener('visibilitychange',()=>{if(!document.hidden)void refresh();});window.addEventListener('online',()=>void refresh());setInterval(()=>{if(!document.hidden)void refresh();},30000);void refresh();
 })();
