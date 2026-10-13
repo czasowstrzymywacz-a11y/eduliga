@@ -269,7 +269,7 @@ function mergeEnglishLeagueProgress(remote,local,baseline) {
   }
   const history=new Map();
   for(const row of [...(a.history||[]),...(b.history||[])])history.set(row.id||JSON.stringify(row),row);
-  return {...a,...b,xp:mergeCount(a.xp,b.xp,base.xp),correct:mergeCount(a.correct,b.correct,base.correct),wrong:mergeCount(a.wrong,b.wrong,base.wrong),rounds:mergeCount(a.rounds,b.rounds,base.rounds),streak:Math.max(Number(a.streak)||0,Number(b.streak)||0),bestStreak:Math.max(Number(a.bestStreak)||0,Number(b.bestStreak)||0),words,awards:[...new Set([...(a.awards||[]),...(b.awards||[])])],history:[...history.values()]};
+  return {...a,...b,xp:mergeCount(a.xp,b.xp,base.xp),correct:mergeCount(a.correct,b.correct,base.correct),wrong:mergeCount(a.wrong,b.wrong,base.wrong),rounds:mergeCount(a.rounds,b.rounds,base.rounds),battles:mergeCount(a.battles,b.battles,base.battles),battleWins:mergeCount(a.battleWins,b.battleWins,base.battleWins),streak:Math.max(Number(a.streak)||0,Number(b.streak)||0),bestStreak:Math.max(Number(a.bestStreak)||0,Number(b.bestStreak)||0),words,awards:[...new Set([...(a.awards||[]),...(b.awards||[])])],history:[...history.values()]};
 }
 function mergeAccountProgress(remote,local,baseline) {
   const a=league.normalize(remote),b=league.normalize(local),base=baseline?league.normalize(baseline):null;

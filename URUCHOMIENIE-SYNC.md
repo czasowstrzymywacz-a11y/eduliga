@@ -54,3 +54,7 @@ Bitwy korzystają z kanałów Supabase Realtime i wymagają zalogowanych kont z 
 ## XP na liście i zaproszenia do bitwy (0.45)
 
 Uruchom `supabase/migrations/202610130001_english_invitations.sql` w SQL Editor istniejącego projektu przed publikacją strony. Funkcja listy ujawnia zalogowanym wyłącznie pseudonim, identyfikator i łączne XP Ligi Angielskiej. Zaproszenia mogą czytać tylko nadawca i adresat; odpowiedź zapisuje wyłącznie adresat. Zaproszenia wygasają po 2 minutach, a wysyłanie ma ograniczenie częstotliwości. Powiadomienia działają przez Realtime i zapasowe odświeżanie co 10 sekund. Wszyscy dołączają do jednego stałego pokoju `liga-angielska-open-room`; nie ma kodów pokoi.
+
+## Rankingi obu lig (0.47)
+
+Przed publikacją wdroż migrację `supabase/migrations/202610130002_league_rankings.sql`. Funkcja udostępnia zalogowanym tylko pseudonimy i zbiorcze statystyki nauki; nie udostępnia adresów e-mail ani historii odpowiedzi. XPo to suma zaokrąglonych wyników dyktand (0–100), XP pochodzi wyłącznie z Ligi Angielskiej. Średnia ortograficzna wymaga 3 dyktand, skuteczność angielska 10 odpowiedzi. Do plików publikacji dołącz `liga-rankings.js`.
