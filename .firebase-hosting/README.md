@@ -1,7 +1,7 @@
 # Przygotowanie adresu eduliga.web.app
 
-Status: wersja 0.66 opublikowana pod https://eduliga.web.app/. Projekt i witryna Hosting: `eduliga`, plan Spark. Użytkownik osobno zatwierdził uprawnienia oficjalnego Firebase CLI. Supabase Auth ma nowy Site URL i dokładny Redirect URL; stare powroty pozostają dozwolone.
-Wersję zwiększono dokładnie raz do 0.66. Nie przenoszono bazy danych ani kont do Firebase.
+Status: wersja 0.68 opublikowana pod https://eduliga.web.app/. Projekt i witryna Hosting: `eduliga`, plan Spark. Użytkownik osobno zatwierdził uprawnienia oficjalnego Firebase CLI. Supabase Auth ma nowy Site URL i dokładny Redirect URL; stare powroty pozostają dozwolone.
+Pierwsza publikacja Firebase: 0.66. Kolejne poprawki 0.67–0.68 mają osobne wpisy historii i pojedyncze zwiększenia wersji na publikację. Nie przenoszono bazy danych ani kont do Firebase.
 
 1. Włączyć dostęp do przeglądarki w Work i otworzyć Firebase Console na koncie właściciela.
 2. Sprawdzić, czy identyfikator witryny Hosting `eduliga` jest dostępny. Brak strony pod adresem nie potwierdza dostępności nazwy.
