@@ -1,0 +1,6 @@
+tools/
+public/
+.firebase/
+firebase-debug.log*
+firepit-log.txt
+qa-*
