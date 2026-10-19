@@ -2,13 +2,73 @@
   "hosting": {
     "site": "eduliga",
     "public": "public",
-    "ignore": [".*", "node_modules/**"],
+    "ignore": [
+      ".*",
+      "node_modules/**"
+    ],
     "headers": [
-      {"source":"**", "headers":[{"key":"X-Content-Type-Options","value":"nosniff"},{"key":"Referrer-Policy","value":"strict-origin-when-cross-origin"}]},
-      {"source":"/", "headers":[{"key":"Cache-Control","value":"no-cache"}]},
-      {"source":"/index.html", "headers":[{"key":"Cache-Control","value":"no-cache"}]},
-      {"source":"/version.json", "headers":[{"key":"Cache-Control","value":"no-store"}]},
-      {"source":"**/*.@(js|css)", "headers":[{"key":"Cache-Control","value":"public,max-age=300"}]}
+      {
+        "source": "**",
+        "headers": [
+          {
+            "key": "X-Content-Type-Options",
+            "value": "nosniff"
+          },
+          {
+            "key": "Referrer-Policy",
+            "value": "strict-origin-when-cross-origin"
+          }
+        ]
+      },
+      {
+        "source": "/",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache"
+          }
+        ]
+      },
+      {
+        "source": "/index.html",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache"
+          }
+        ]
+      },
+      {
+        "source": "/version.json",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-store"
+          }
+        ]
+      },
+      {
+        "source": "**/*.@(js|css)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public,max-age=300"
+          }
+        ]
+      },
+      {
+        "source": "/eduliga-push-sw.js",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache"
+          },
+          {
+            "key": "Service-Worker-Allowed",
+            "value": "/"
+          }
+        ]
+      }
     ]
   }
 }
