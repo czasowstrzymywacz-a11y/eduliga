@@ -6,7 +6,7 @@ $assets = @(
  'liga-angielska.js','liga-angielska.css','liga-social.js','liga-rankings.js',
  'liga-platform.js','liga-platform.css','liga-hiszpanska-data.js','liga-hiszpanska.js',
  'liga-zdania.js','liga-arena.js','liga-pomocnika.js','eduliga-ui.js',
- 'eduliga-community.js','eduliga-experience.js','eduliga-topics.js','eduliga-ocr.js','eduliga-hosting.js','eduliga-tenses.js','eduliga-suggestions.js','eduliga-english-lesson.js','eduliga-guests.js','eduliga-push.js','eduliga-push-sw.js',
+ 'eduliga-community.js','eduliga-experience.js','eduliga-topics.js','eduliga-ocr.js','eduliga-hosting.js','eduliga-tenses.js','eduliga-suggestions.js','eduliga-english-lesson.js','eduliga-guests.js','eduliga-push.js','eduliga-push-sw.js','eduliga-access.js','eduliga-diagnostics.js',
  'eduliga-logo.svg','eduliga-flag-en.svg','eduliga-flag-es.svg','eduliga-flag-pl.svg'
 )
 foreach ($asset in $assets) {
