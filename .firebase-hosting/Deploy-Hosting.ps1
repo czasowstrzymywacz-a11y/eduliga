@@ -5,6 +5,7 @@ if (-not (Test-Path -LiteralPath $cli -PathType Leaf)) {
 }
 # Use the Windows certificate store as well as Node's bundled roots.
 $env:NODE_USE_SYSTEM_CA = '1'
+& (Join-Path (Split-Path -Parent $PSScriptRoot) 'Create-Backup.ps1')
 & (Join-Path $PSScriptRoot 'Prepare-Hosting.ps1')
 Push-Location $PSScriptRoot
 try {
